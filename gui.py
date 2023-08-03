@@ -27,7 +27,7 @@ def show_terms():
 
 #Terms of Agreement button and function to show terms
 checkbutton = ttkbs.Checkbutton(frame, text="Terms of Agreement", style="secondary", command=show_terms)
-checkbutton.grid(column=0, row=6, padx=5, pady=10)
+checkbutton.grid(column=0, row=8, padx=5, pady=10)
 
 # Email and password entry labels and entry fields
 email_label = ttkbs.Label(frame, text="Email", style="info")
@@ -40,9 +40,18 @@ password_label.grid(column=0, row=3, padx=5, pady=10)
 password_entry = ttkbs.Entry(frame, width=30, style="info")
 password_entry.grid(column=0, row=4, padx=5, pady=10)
 
+#Choose imap server using combobox
+server_label = ttkbs.Label(frame, text="Choose Email Client", style="info")
+server_label.grid(column=0, row=5, padx=5, pady=10)
+server_combobox = ttkbs.Combobox(frame, width=27, style="info")
+server_combobox['values'] = ('Outlook (Working)', 'Gmail (Not Working)', 'Others (Not Working)')
+server_combobox.grid(column=0, row=6, padx=5, pady=10)
+
+
+
 #Login button
 loginbutton = ttkbs.Button(frame, text="Login", bootstyle=SUCCESS)
-loginbutton.grid(column=0, row=5, pady=10)
+loginbutton.grid(column=0, row=7, pady=10)
 
 root.mainloop()
 
