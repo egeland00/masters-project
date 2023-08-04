@@ -92,7 +92,7 @@ class PhishingDetectorGUI:
         load_all_emails_button.pack(side='left', padx= 10, pady=5)
 
         # Create a "Logout" button with an orange color (warning style). This button is packed to the right in the button frame.
-        logout_button = ttkbs.Button(right_button_frame, text="Logout", style="warning")
+        logout_button = ttkbs.Button(right_button_frame, text="Logout", style="warning", command=self.logout)
         logout_button.pack(side='right', padx=10, pady=5)
 
 
@@ -118,6 +118,17 @@ class PhishingDetectorGUI:
         with open('/home/orjan/Documents/GitHub/masters-project/TOA.txt', 'r') as f:
             terms = f.read()
         messagebox.showinfo("Terms of Agreement", terms)
+
+    # Function to handle logout, calling the logout function in the EmailFetcher class
+    def logout(self):
+        if self.email_fetcher.logout():
+            messagebox.showinfo("Success", "Logged out successfully!")
+        else:
+            messagebox.showerror("Error", "Logout failed!")
+        
+        # Destroing the main frame and recreate the login frame
+        self.main_frame.destroy()
+        self._create_login_frame()    
 
     # Function to start the GUI
     def run(self):

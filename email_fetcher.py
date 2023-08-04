@@ -33,3 +33,13 @@ class EmailFetcher:
             # Print the error if login failed and show an error message to the user
             messagebox.showerror("Error", "Incorrect Credentials!")
             return False  # Return False if login failed
+    
+    # Method for logging out of the user's email session
+    def logout(self):
+        try:
+            # Logout from the IMAP session
+            self.mail.logout()
+            return True
+        except Exception as e:
+            print(f"Logout failed: {e}")
+            return False
