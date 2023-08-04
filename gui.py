@@ -61,6 +61,8 @@ class PhishingDetectorGUI:
         self.header = ttkbs.Label(self.main_frame, text="Welcome to MSC Email Phishing Detector", bootstyle="default", font=("Ubuntu", 24, "bold"))
         self.header.pack(padx=5, pady=10)
 
+        self.info_header = ttkbs.Label(self.main_frame, text="Step by Step:\n 1. Load Your Emails By Pressing 'Load Emails' \n 2. Scan Emails By Pressing 'Scan Now' \n 3. View Results", bootstyle="info", font=("Ubuntu", 12))
+        self.info_header.pack(padx=5, pady=10)
         # Create a Treeview to display the emails. It has five columns: From, To, Date, Subject, and Risk.
         self.email_treeview = ttkbs.Treeview(self.main_frame, columns=("From", "To", "Date", "Subject", "Risk"), show='headings')
         # Set the headings for each column in the Treeview.
