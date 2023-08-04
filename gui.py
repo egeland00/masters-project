@@ -5,6 +5,7 @@ from tkinter import messagebox
 from ttkbootstrap.constants import *
 import ttkbootstrap as ttkbs
 from email_fetcher import EmailFetcher
+from typing import List, Dict, Union
 
 # Defining the GUI class for the application
 class PhishingDetectorGUI:
@@ -66,7 +67,7 @@ class PhishingDetectorGUI:
         self.info_header = ttkbs.Label(self.main_frame, text="Step by Step:\n 1. Load Your Emails By Pressing 'Load Emails' \n 2. Scan Emails By Pressing 'Scan Now' \n 3. View Results", bootstyle="info", font=("Ubuntu", 12))
         self.info_header.pack(padx=5, pady=10)
         # Create a Treeview to display the emails. It has five columns: From, To, Date, Subject, and Risk.
-        self.email_treeview = ttkbs.Treeview(self.main_frame, columns=("From", "To", "Date", "Subject", "Risk"), show='headings')
+        self.email_treeview = ttkbs.Treeview(self.main_frame, columns=("From", "To", "Date", "Subject", "Risk"), show='headings', height=25)
         # Set the headings for each column in the Treeview.
         self.email_treeview.heading("From", text="From")
         self.email_treeview.heading("To", text="To")
@@ -88,7 +89,7 @@ class PhishingDetectorGUI:
         scan_emails_button.pack(side='left', padx= 10, pady=5)
 
         # Create a "Load Emails" button with a blue color (info style). This button is packed to the left in the button frame, next to the "Scan Now" button.
-        load_all_emails_button = ttkbs.Button(left_button_frame, text="Load Emails", style="info")
+        load_all_emails_button = ttkbs.Button(left_button_frame, text="Load Emails", style="info", command=self._all_emails)
         load_all_emails_button.pack(side='left', padx= 10, pady=5)
 
         # Create a "Logout" button with an orange color (warning style). This button is packed to the right in the button frame.
@@ -128,7 +129,49 @@ class PhishingDetectorGUI:
         
         # Destroing the main frame and recreate the login frame
         self.main_frame.destroy()
-        self._create_login_frame()    
+        self._create_login_frame()  
+
+    # The function "_all_emails" fetches all emails from the email account associated with the email fetcher object.
+    # It then uses these emails to update the GUI's email table.
+    def _all_emails(self):
+        print("Loading all emails...")
+        # Retrieve all emails from the email account. Function is called from email_fetcher.py
+        emails = self.email_fetcher.load_all_emails()
+        print(emails)
+        # Update the email table in the GUI with the fetched emails
+        self._update_table(emails)
+
+    # The function "_update_table" takes a list of emails (each email represented as a dictionary) as input.
+    # It updates the GUI's email table with these emails.
+    def _update_table(self, emails: List[Dict[str, Union[str, bool]]]) -> None:
+        # Initialise a list to store the IDs of the email entries in the table
+        self.email_ids = []    
+
+        # Clear the email table by deleting all current entries
+        for email in self.email_treeview.get_children():
+            self.email_treeview.delete(email)
+        
+        # For each email in the input list, insert a new entry in the email table
+        for email in emails:
+            # Check if the email is classified as phishing (according to the "is_phishing" key in the email dictionary).
+            # If it is, set the tag for this email entry to "spam". If it's not, set the tag to "not_spam".
+            if email.get("is_phishing", False):
+                tag = "spam"
+            else:
+                tag = "not_spam"
+            
+            # Insert a new entry at the end of the email table. The entry's values are the email's information.
+            # Also, assign the previously determined tag to this entry.
+            email_id = self.email_treeview.insert('', 'end', values=(
+                email['from'],   
+                email['to'],     
+                email['date'],   
+                email['subject'],
+                'yes' if email.get("is_phishing", False) else 'no'  # Whether the email is classified as phishing
+            ), tags=(tag,))  # Tag indicating whether the email is classified as phishing
+            
+            # Add the ID of the new entry to the list of email IDs
+            self.email_ids.append(email_id)
 
     # Function to start the GUI
     def run(self):

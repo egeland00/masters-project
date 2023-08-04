@@ -58,9 +58,9 @@ class EmailFetcher:
         _, data = self.mail.search(None, "ALL")
         
         # The `_fetch_emails` method is called with the email IDs returned by the `search` command. It fetches the emails from the server and returns them as a list of dictionaries.
-        return self._fetch_emails(data)
+        return self.fetch_emails(data)
 
-    def _fetch_emails(self, data):
+    def fetch_emails(self, data):
         # The input `data` contains a list of email IDs. The first item of the list is split into individual email IDs.
         email_ids = data[0].split()
 
@@ -76,10 +76,10 @@ class EmailFetcher:
             email_message: EmailMessage = email.message_from_bytes(data[0][1])
             
             # The `_parse_email` method is called with the `EmailMessage` object to convert the email into a more usable dictionary format.
-            email_dict = self._parse_email(email_message)
+            #email_dict = self._parse_email(email_message)
             
             # The dictionary representing the email is appended to the list of emails.
-            emails.append(email_dict)
+            emails.append(email_message)
 
         # The list of emails is returned.
         return emails
