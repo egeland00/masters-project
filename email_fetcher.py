@@ -4,7 +4,7 @@ from tkinter import messagebox
 
 # Defining the EmailFetcher class
 class EmailFetcher:
-    # Initialization method for the EmailFetcher class
+    # Initialisation method for the EmailFetcher class
     def __init__(self, email: str, password: str, email_service: str):
         self.email = email  # User's email
         self.password = password  # User's password
