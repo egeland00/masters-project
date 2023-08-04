@@ -34,7 +34,7 @@ class PhishingDetectorGUI:
         # Adding labels and entry fields for Password
         self.password_label = ttkbs.Label(self.login_frame, text="Password", style="info")
         self.password_label.pack(padx=5, pady=10)
-        self.password_entry = ttkbs.Entry(self.login_frame, width=30, style="info")
+        self.password_entry = ttkbs.Entry(self.login_frame, width=30, style="info", show="*")
         self.password_entry.pack(padx=5, pady=10)
 
         # Adding a combobox for choosing the email client
