@@ -19,37 +19,39 @@ class PhishingDetectorGUI:
     def _create_login_frame(self):
         # Creating a Frame to hold the widgets in the center of the window
         self.login_frame = ttkbs.Frame(self.root)
-        self.login_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.login_frame.pack(expand=True)
 
         # Adding a header label to the GUI
         self.header = ttkbs.Label(self.login_frame, text="Welcome to Phishing Detection(EDUCATIONAL PURPOSE ONLY)", bootstyle="default", font=("Ubuntu", 24, "bold"))
-        self.header.grid(column=0, row=0, padx=5, pady=10)
+        self.header.pack(padx=5, pady=10)
 
-        # Adding a checkbutton for terms of agreement and linking it to the 'show_terms' function
-        self.checkbutton = ttkbs.Checkbutton(self.login_frame, text="Terms of Agreement", style="info", command=self.show_terms)
-        self.checkbutton.grid(column=0, row=8, padx=5, pady=10)
-
-        # Adding labels and entry fields for Email and Password
+        # Adding labels and entry fields for Email
         self.email_label = ttkbs.Label(self.login_frame, text="Email", style="info")
-        self.email_label.grid(column=0, row=1, padx=5, pady=10)
+        self.email_label.pack(padx=5, pady=10)
         self.email_entry = ttkbs.Entry(self.login_frame, width=30, style="info")
-        self.email_entry.grid(column=0, row=2, padx=5, pady=10)
-        
+        self.email_entry.pack(padx=5, pady=10)
+
+        # Adding labels and entry fields for Password
         self.password_label = ttkbs.Label(self.login_frame, text="Password", style="info")
-        self.password_label.grid(column=0, row=3, padx=5, pady=10)
+        self.password_label.pack(padx=5, pady=10)
         self.password_entry = ttkbs.Entry(self.login_frame, width=30, style="info")
-        self.password_entry.grid(column=0, row=4, padx=5, pady=10)
+        self.password_entry.pack(padx=5, pady=10)
 
         # Adding a combobox for choosing the email client
         self.server_label = ttkbs.Label(self.login_frame, text="Choose Email Client", style="info")
-        self.server_label.grid(column=0, row=5, padx=5, pady=10)
+        self.server_label.pack(padx=5, pady=10)
         self.server_combobox = ttkbs.Combobox(self.login_frame, width=27, style="info")
         self.server_combobox['values'] = ('Outlook (Working)', 'Gmail (Not Working)', 'Others (Not Working)')
-        self.server_combobox.grid(column=0, row=6, padx=5, pady=10)
+        self.server_combobox.pack(padx=5, pady=10)
 
         # Adding a Login button and linking it to the 'login' function
         self.loginbutton = ttkbs.Button(self.login_frame, text="Login", bootstyle='success', command=self.login)
-        self.loginbutton.grid(column=0, row=7, pady=10)
+        self.loginbutton.pack(pady=10)
+
+        # Adding a checkbutton for terms of agreement and linking it to the 'show_terms' function
+        self.checkbutton = ttkbs.Checkbutton(self.login_frame, text="Terms of Agreement", style="info", command=self.show_terms)
+        self.checkbutton.pack(padx=5, pady=10)
+
     
     
     def _create_main_frame(self):
