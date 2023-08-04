@@ -61,22 +61,6 @@ class PhishingDetectorGUI:
         self.header = ttkbs.Label(self.main_frame, text="Welcome to MSC Email Phishing Detector", bootstyle="default", font=("Ubuntu", 24, "bold"))
         self.header.pack(padx=5, pady=10)
 
-        # Create a Frame to hold the buttons.
-        button_frame = ttkbs.Frame(self.main_frame)
-        button_frame.pack(pady=5)
-
-        # Create a "Scan Now" button with a green color (success style). This button is packed to the left in the button frame.
-        scan_emails_button = ttkbs.Button(button_frame, text="Scan Now", style="success")
-        scan_emails_button.pack(side='left', padx=10, pady=5)
-
-        # Create a "Load Emails" button with a blue color (info style). This button is packed to the left in the button frame, next to the "Scan Now" button.
-        load_all_emails_button = ttkbs.Button(button_frame, text="Load Emails", style="info")
-        load_all_emails_button.pack(side='left', padx=10, pady=5)
-
-        # Create a "Logout" button with an orange color (warning style). This button is packed to the right in the button frame.
-        logout_button = ttkbs.Button(button_frame, text="Logout", style="warning")
-        logout_button.pack(side='right', padx=10, pady=5)
-
         # Create a Treeview to display the emails. It has five columns: From, To, Date, Subject, and Risk.
         self.email_treeview = ttkbs.Treeview(self.main_frame, columns=("From", "To", "Date", "Subject", "Risk"), show='headings')
         # Set the headings for each column in the Treeview.
@@ -85,8 +69,28 @@ class PhishingDetectorGUI:
         self.email_treeview.heading("Date", text="Date")
         self.email_treeview.heading("Subject", text="Subject")
         self.email_treeview.heading("Risk", text="Risk")
-        # Pack the Treeview below the buttons in the frame.
         self.email_treeview.pack(pady=5)
+
+        # Create a Frame to hold the buttons on left side.
+        left_button_frame = ttkbs.Frame(self.main_frame)
+        left_button_frame.pack(side='left') 
+
+        # Create a Frame to hold the buttons on right side.
+        right_button_frame = ttkbs.Frame(self.main_frame)
+        right_button_frame.pack(side='right')
+
+        # Create a "Scan Now" button with a green color (success style). This button is packed to the left in the button frame.
+        scan_emails_button = ttkbs.Button(left_button_frame, text="Scan Now", style="success")
+        scan_emails_button.pack(side='left', padx= 10, pady=5)
+
+        # Create a "Load Emails" button with a blue color (info style). This button is packed to the left in the button frame, next to the "Scan Now" button.
+        load_all_emails_button = ttkbs.Button(left_button_frame, text="Load Emails", style="info")
+        load_all_emails_button.pack(side='left', padx= 10, pady=5)
+
+        # Create a "Logout" button with an orange color (warning style). This button is packed to the right in the button frame.
+        logout_button = ttkbs.Button(right_button_frame, text="Logout", style="warning")
+        logout_button.pack(side='right', padx=10, pady=5)
+
 
 
         # Function to handle login
