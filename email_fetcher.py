@@ -34,9 +34,7 @@ class EmailFetcher:
             del self.password
 
             return True  # Return True if login was successful
-        except imaplib.IMAP4.error as e:
-            # Print the error if login failed and show an error message to the user
-            messagebox.showerror("Error", "Incorrect Credentials!")
+        except imaplib.IMAP4.error:
             return False  # Return False if login failed
 
     
