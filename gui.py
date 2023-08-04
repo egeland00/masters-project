@@ -55,23 +55,27 @@ class PhishingDetectorGUI:
     def _create_main_frame(self):
         # Create a new Frame widget that will hold all other widgets. This frame is placed in the center of the root window.
         self.main_frame = ttkbs.Frame(self.root)
-        self.main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.main_frame.pack(expand=True)
 
-        # Create a label with a welcome message. This is placed in the top row of the grid within the frame.
-        self.header = ttkbs.Label(self.main_frame, text="Welcome! Start by loading emails followed by scan", bootstyle="default", font=("Ubuntu", 24, "bold"))
-        self.header.grid(column=0, row=0, padx=5, pady=10)
+        # Create a label with a welcome message. This label is packed at the top of the frame.
+        self.header = ttkbs.Label(self.main_frame, text="Welcome to MSC Email Phishing Detector", bootstyle="default", font=("Ubuntu", 24, "bold"))
+        self.header.pack(padx=5, pady=10)
 
-        # Create a "Scan Now" button with a green color (success style). This button is placed next to the label.
-        scan_emails_button = ttkbs.Button(self.main_frame, text="Scan Now", style="success")
-        scan_emails_button.grid(column=0, row=1, padx=10, pady=5)
+        # Create a Frame to hold the buttons.
+        button_frame = ttkbs.Frame(self.main_frame)
+        button_frame.pack(pady=5)
 
-        # Create a "Load Emails" button with a blue color (info style). This button is placed next to the "Scan Now" button.
-        load_all_emails_button = ttkbs.Button(self.main_frame, text="Load Emails", style="info")
-        load_all_emails_button.grid(column=1, row=1, padx=10, pady=5)
+        # Create a "Scan Now" button with a green color (success style). This button is packed to the left in the button frame.
+        scan_emails_button = ttkbs.Button(button_frame, text="Scan Now", style="success")
+        scan_emails_button.pack(side='left', padx=10, pady=5)
 
-        # Create a "Logout" button with an orange color (warning style). This button is placed next to the "Load Emails" button.
-        logout_button = ttkbs.Button(self.main_frame, text="Logout", style="warning")
-        logout_button.grid(column=2, row=1, padx=10, pady=5)
+        # Create a "Load Emails" button with a blue color (info style). This button is packed to the left in the button frame, next to the "Scan Now" button.
+        load_all_emails_button = ttkbs.Button(button_frame, text="Load Emails", style="info")
+        load_all_emails_button.pack(side='left', padx=10, pady=5)
+
+        # Create a "Logout" button with an orange color (warning style). This button is packed to the right in the button frame.
+        logout_button = ttkbs.Button(button_frame, text="Logout", style="warning")
+        logout_button.pack(side='right', padx=10, pady=5)
 
         # Create a Treeview to display the emails. It has five columns: From, To, Date, Subject, and Risk.
         self.email_treeview = ttkbs.Treeview(self.main_frame, columns=("From", "To", "Date", "Subject", "Risk"), show='headings')
@@ -81,8 +85,9 @@ class PhishingDetectorGUI:
         self.email_treeview.heading("Date", text="Date")
         self.email_treeview.heading("Subject", text="Subject")
         self.email_treeview.heading("Risk", text="Risk")
-        # Place the Treeview below the buttons in the grid.
-        self.email_treeview.grid(column=0, row=3, columnspan=3, sticky='nsew')
+        # Pack the Treeview below the buttons in the frame.
+        self.email_treeview.pack(pady=5)
+
 
         # Function to handle login
     def login(self):
