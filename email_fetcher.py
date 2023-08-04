@@ -28,11 +28,17 @@ class EmailFetcher:
             self.mail = imaplib.IMAP4_SSL(self.imap_server)
             # Perform the login using the provided email and password
             self.mail.login(self.email, self.password)
+            
+            # Overwrite and delete the password, as it is no longer needed and for extra security ;)
+            self.password = None
+            del self.password
+
             return True  # Return True if login was successful
         except imaplib.IMAP4.error as e:
             # Print the error if login failed and show an error message to the user
             messagebox.showerror("Error", "Incorrect Credentials!")
             return False  # Return False if login failed
+
     
     # Method for logging out of the user's email session
     def logout(self):
