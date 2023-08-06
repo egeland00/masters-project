@@ -3,7 +3,9 @@ import tkinter as tk  # Tkinter for GUI-related tasks such as displaying error m
 from tkinter import messagebox
 import email  # Library for handling email messages
 from email.message import EmailMessage  # EmailMessage class for creating email messages
-from typing import List, Dict, Union  # Type hints for the functions
+from typing import List, Dict, Union, Any  # Type hints for the functions
+from email.header import decode_header  # decode_header function for decoding email headers
+
 
 # Defining the EmailFetcher class
 class EmailFetcher:
@@ -76,12 +78,74 @@ class EmailFetcher:
             email_message: EmailMessage = email.message_from_bytes(data[0][1])
             
             # The `_parse_email` method is called with the `EmailMessage` object to convert the email into a more usable dictionary format.
-            #email_dict = self._parse_email(email_message)
+            email_dict = self._parse_email(email_message)
             
             # The dictionary representing the email is appended to the list of emails.
-            emails.append(email_message)
+            emails.append(email_dict)
 
         # The list of emails is returned.
         return emails
+
+    
+    def decode_header_value(self, value: str) -> str:
+    # I'm creating this function to decode email headers since as they where encrypted
+    
+        decoded_value = ""  # I'll accumulate the decoded segments here.
+    
+        # I'll split the value into parts where each part represents an encoded 
+        # segment and its encoding type.
+        parts = decode_header(value)
+        
+        for part in parts:
+            # If this part has a specified encoding, I'll decode it accordingly.
+            if part[1] is not None:
+                decoded_value += part[0].decode(part[1])
+            else:
+                # If it doesn't have a specified encoding, I'll check:
+                # 1. If it's a string, I'll just append it.
+                # 2. If it's bytes, I'll default to 'utf-8' decoding.
+                decoded_value += part[0] if isinstance(part[0], str) else part[0].decode('utf-8')
+    
+        return decoded_value  # here I return the decoded string!
+
+    def _parse_email(self, email: Any) -> Dict[str, Union[str, bool]]:
+        # I'm setting out to extract the main components of an email 
+        # (like subject, sender, recipient, date, and body) into a dictionary.
+        
+        # I'll start by decoding the 'subject' and 'from' fields to ensure they're 
+        # represented correctly, then fetch 'to' and 'date' directly.
+        email_dict = {
+            "subject": self.decode_header_value(email.get('Subject', '')),
+            "from": self.decode_header_value(email.get('From', '')),
+            "to": email.get("To", ""),
+            "date": email.get("Date", "")
+        }
+        
+        # Multipart emails have multiple sections 
+        # (like plain text and HTML). I'll check for that in this section.
+        if email.is_multipart():
+            # If it's multipart, I'll go through each section to find the body.
+            for part in email.walk():
+                content_type = part.get_content_type()
+                
+                # im looking for content type of "text/plain" and "text/html".
+                if content_type in ["text/plain", "text/html"]:
+                    # I'll figure out what character set to use for decoding. 
+                    # If none is specified, I'll default to 'utf-8'.
+                    charset = part.get_content_charset() or 'utf-8'
+                    
+                    # Now, I'll decode the body and add it to my dictionary.
+                    body = part.get_payload(decode=True).decode(charset, 'ignore')
+                    
+                    email_dict["body"] = body  
+                    break # I'll break out of the loop after the first body is found.
+        else:
+            # If the email isn't multipart. I'll just grab the body directly.
+            
+            charset = email.get_content_charset() or 'utf-8'
+            body = email.get_payload(decode=True).decode(charset, 'ignore')
+            email_dict["body"] = body
+
+        return email_dict  # Returning dictionary with the email details.
 
     
