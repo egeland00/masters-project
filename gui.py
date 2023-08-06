@@ -172,6 +172,8 @@ class PhishingDetectorGUI:
             
             # Add the ID of the new entry to the list of email IDs
             self.email_ids.append(email_id)
+        self.email_treeview.tag_configure("spam", background="red")  # Set the background color of the "spam" tag to red
+        self.email_treeview.tag_configure("not_spam", background="green")  # Set the background color of the "not_spam" tag to green
 
     # Function to start the GUI
     def run(self):
