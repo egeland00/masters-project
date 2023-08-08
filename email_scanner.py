@@ -7,6 +7,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import precision_score, recall_score, f1_score
 from bs4 import BeautifulSoup
 import string
+from typing import List, Dict, Union, Any
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -120,13 +121,15 @@ class EmailScanner:
 
             # Join the processed tokens back together into a single string
             return ' '.join(tokens)
-# Specify the path to your dataset
+        
+
+    # Specify the path to your dataset
 path_to_dataset = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
 
 # Create an instance of the EmailScanner class using the path
 scanner = EmailScanner(path_to_dataset)
 
 # Test the function preprocess_single_email. 
-sample_email = scanner.dataset['Message'][0]
-print("Original email: ", sample_email)
-print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
+#sample_email = scanner.dataset['Message'][0]
+#print("Original email: ", sample_email)
+#print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))

@@ -6,6 +6,7 @@ from ttkbootstrap.constants import *
 import ttkbootstrap as ttkbs
 from email_fetcher import EmailFetcher
 from typing import List, Dict, Union
+from email_scanner import EmailScanner
 
 # Defining the GUI class for the application
 class PhishingDetectorGUI:
@@ -14,7 +15,7 @@ class PhishingDetectorGUI:
         self.root = ttkbs.Window(themename="superhero")
         self.root.title("Phishing Detection")
         self.root.geometry("1920x1080")
-        
+        self.scanner = EmailScanner('/home/orjan/Documents/GitHub/masters-project/dataset.csv')
         self._create_login_frame()  # Creating the login frame
     
     def _create_login_frame(self):
@@ -134,12 +135,12 @@ class PhishingDetectorGUI:
     # The function "_all_emails" fetches all emails from the email account associated with the email fetcher object.
     # It then uses these emails to update the GUI's email table.
     def _all_emails(self):
-        print("Loading all emails...")
         # Retrieve all emails from the email account. Function is called from email_fetcher.py
         emails = self.email_fetcher.load_all_emails()
-        print(emails)
         # Update the email table in the GUI with the fetched emails
         self._update_table(emails)
+
+    
 
     # The function "_update_table" takes a list of emails (each email represented as a dictionary) as input.
     # It updates the GUI's email table with these emails.
@@ -174,6 +175,7 @@ class PhishingDetectorGUI:
             self.email_ids.append(email_id)
         self.email_treeview.tag_configure("spam", background="red")  # Set the background color of the "spam" tag to red
         self.email_treeview.tag_configure("not_spam", background="green")  # Set the background color of the "not_spam" tag to green
+    
 
     # Function to start the GUI
     def run(self):

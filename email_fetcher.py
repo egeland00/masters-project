@@ -138,6 +138,8 @@ class EmailFetcher:
                     body = part.get_payload(decode=True).decode(charset, 'ignore')
                     
                     email_dict["body"] = body  
+                    #print("Email Body:", email_dict["body"])
+                    # print(email_dict["body"])
                     break # I'll break out of the loop after the first body is found.
         else:
             # If the email isn't multipart. I'll just grab the body directly.
@@ -145,7 +147,7 @@ class EmailFetcher:
             charset = email.get_content_charset() or 'utf-8'
             body = email.get_payload(decode=True).decode(charset, 'ignore')
             email_dict["body"] = body
+            #print(email_dict["body"])
+            
 
         return email_dict  # Returning dictionary with the email details.
-
-    
