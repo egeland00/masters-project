@@ -16,18 +16,28 @@ class EmailScanner:
         
         def __init__(self, dataset_path): # add path to dataset
             self.dataset = pd.read_csv(dataset_path)
+            print(self.dataset.head()) # added to test to see if the dataset is loaded correctly
             self.stop_words = nltk.corpus.stopwords.words('english')
             self.preprocess_dataset()
             self.train_model()
     
 
         def preprocess_dataset(self):
-            
+            # Helper function to parse potential HTML content
+            def parse_html_content(x):
+                # If the content looks like a filename (contains a dot and has few words), return it as is
+                if "." in x and len(x.split()) <= 2:
+                    return x
+                try:
+                    return BeautifulSoup(x, 'lxml').get_text()
+                except:
+                    return x
+
             # Convert to lowercase
             self.dataset['Message'] = self.dataset['Message'].str.lower()
 
             # Remove HTML tags
-            self.dataset['Message'] = self.dataset['Message'].apply(lambda x: BeautifulSoup(x, 'lxml').get_text())
+            self.dataset['Message'] = self.dataset['Message'].apply(parse_html_content)
 
             # Tokenize
             self.dataset['Message'] = self.dataset['Message'].apply(nltk.word_tokenize)
@@ -37,7 +47,8 @@ class EmailScanner:
             self.dataset['Message'] = self.dataset['Message'].apply(lambda x: ['EMAILADDRESS' if '@' in word else word for word in x])
 
             # Joining the tokens back to a string
-            self.dataset['Message'] = self.dataset['Message'].apply(' '.join)
+            self.dataset['Message'] = self.dataset['Message'].apply(lambda x: ' '.join(x))
+
 
         def train_model(self):
             # initialise a CountVectorizer. this will convert text into a vectors using the bag-og-word method.
@@ -108,3 +119,6 @@ path_to_dataset = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
 
 # Create an instance of the EmailScanner class using the path
 scanner = EmailScanner(path_to_dataset)
+sample_email = scanner.dataset['Message'][0]
+print("Original email: ", sample_email)
+print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
