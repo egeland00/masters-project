@@ -11,6 +11,7 @@ import string
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 class EmailScanner:
         
@@ -46,9 +47,14 @@ class EmailScanner:
             self.dataset['Message'] = self.dataset['Message'].apply(lambda x: ['URL' if word.startswith(('http://', 'https://', 'www.')) else word for word in x])
             self.dataset['Message'] = self.dataset['Message'].apply(lambda x: ['EMAILADDRESS' if '@' in word else word for word in x])
 
+            # Remove stopwords and punctuation
+            self.dataset['Message'] = self.dataset['Message'].apply(lambda x: [word for word in x if word not in self.stop_words and word not in string.punctuation])
+
+
             # Joining the tokens back to a string
             self.dataset['Message'] = self.dataset['Message'].apply(lambda x: ' '.join(x))
 
+        
 
         def train_model(self):
             # initialise a CountVectorizer. this will convert text into a vectors using the bag-og-word method.
@@ -119,6 +125,8 @@ path_to_dataset = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
 
 # Create an instance of the EmailScanner class using the path
 scanner = EmailScanner(path_to_dataset)
+
+# Test the function preprocess_single_email. 
 sample_email = scanner.dataset['Message'][0]
 print("Original email: ", sample_email)
 print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
