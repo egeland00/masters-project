@@ -4,6 +4,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+
 
 
 class EmailScanner:
