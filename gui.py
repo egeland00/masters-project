@@ -86,7 +86,7 @@ class PhishingDetectorGUI:
         right_button_frame.pack(side='right')
 
         # Create a "Scan Now" button with a green color (success style). This button is packed to the left in the button frame.
-        scan_emails_button = ttkbs.Button(left_button_frame, text="Scan Now", style="success")
+        scan_emails_button = ttkbs.Button(left_button_frame, text="Scan Now", style="success", command=self.scan_emails)
         scan_emails_button.pack(side='left', padx= 10, pady=5)
 
         # Create a "Load Emails" button with a blue color (info style). This button is packed to the left in the button frame, next to the "Scan Now" button.
@@ -176,6 +176,29 @@ class PhishingDetectorGUI:
         self.email_treeview.tag_configure("spam", background="red")  # Set the background color of the "spam" tag to red
         self.email_treeview.tag_configure("not_spam", background="green")  # Set the background color of the "not_spam" tag to green
     
+    # Function to handle the "Scan Now" button
+    def scan_emails(self):
+        emails = self.email_fetcher.load_all_emails()
+        # Scan emails for phishing
+        for i, email in enumerate(emails):
+            if isinstance(email["body"], bool):
+                continue
+            result = self.scanner.scan(str(email["body"]))
+            print(f"Email {i+1} scan result: {result}")  # Add this debug print statement
+            email["is_phishing"] = result
+            if email["is_phishing"] == 'spam':
+                self.email_treeview.item(self.email_ids[i], tags='spam')
+            else:
+                self.email_treeview.item(self.email_ids[i], tags='not_spam')
+
+        self.email_treeview.tag_configure('spam', background='red')
+        self.email_treeview.tag_configure('not_spam', background='green')    
+
+        print("Scanning emails completed.")
+        messagebox.showinfo("Info", "Scanning emails completed.")
+
+        # Update table with new emails
+        self._update_table(emails)
 
     # Function to start the GUI
     def run(self):

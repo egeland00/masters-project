@@ -25,21 +25,9 @@ class EmailScanner:
     
 
         def preprocess_dataset(self):
-            # Helper function to parse potential HTML content
-            def parse_html_content(x):
-                # If the content looks like a filename (contains a dot and has few words), return it as is
-                if "." in x and len(x.split()) <= 2:
-                    return x
-                try:
-                    return BeautifulSoup(x, 'lxml').get_text()
-                except:
-                    return x
 
             # Convert to lowercase
             self.dataset['Message'] = self.dataset['Message'].str.lower()
-
-            # Remove HTML tags
-            self.dataset['Message'] = self.dataset['Message'].apply(parse_html_content)
 
             # Tokenize
             self.dataset['Message'] = self.dataset['Message'].apply(nltk.word_tokenize)
@@ -65,6 +53,19 @@ class EmailScanner:
             # Extracting the #Catergoy# colum from the dateset as the target variable.
             y = self.dataset['Category']
 
+            # Sample to demonstrate the vectorizer
+            sample_message = self.dataset['Message'][0]
+            vectorized_sample = self.vectorizer.transform([sample_message])
+
+            # Print the vectorized sample
+            print("\nEffect of Vectorization:")
+            print(f"Original Message: {sample_message}")
+            print(f"Vectorized Representation: {vectorized_sample.toarray()}\n")
+
+            # Print the vocabulary
+            print("Vocabulary:" , self.vectorizer.vocabulary_)
+
+
             # Split the dataset into training and testing sets.
             self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(x, y, test_size=0.2, random_state=0)
             self.model = MultinomialNB()
@@ -89,16 +90,6 @@ class EmailScanner:
             print("Recall:", recall_score(self.y_test, y_pred, pos_label='spam'))
             print("F1 Score:", f1_score(self.y_test, y_pred, pos_label='spam'))
 
-        def scan(self, email: str) -> bool:
-            email = self.preprocess_single_email(email)
-            email_vec = self.vectorizer.transform([email])
-            prediction = self.model.predict(email_vec)
-
-            # Print the prediction probability
-            prediction_prob = self.model.predict_proba(email_vec)
-            print(f"Prediction probability for email: {prediction_prob}")
-
-            return prediction[0] == "spam"
 
         def preprocess_single_email(self, email: str) -> str:
             # Convert the email to lowercase for consistency
@@ -116,11 +107,23 @@ class EmailScanner:
             # Replace any email addresses in the email with the word 'EMAILADDRESS'
             tokens = ['EMAILADDRESS' if '@' in word else word for word in tokens]
 
+
             # Remove stopwords and punctuation from the tokens
             tokens = [word for word in tokens if word not in self.stop_words and word not in string.punctuation]
 
             # Join the processed tokens back together into a single string
             return ' '.join(tokens)
+        
+        def scan(self, email: str) -> bool:
+            email = self.preprocess_single_email(email)
+            email_vec = self.vectorizer.transform([email])
+            prediction = self.model.predict(email_vec)
+
+            # Print the prediction probability
+            prediction_prob = self.model.predict_proba(email_vec)
+            print(f"Prediction probability for email: {prediction_prob}")
+
+            return prediction[0] == "spam"
         
 
     # Specify the path to your dataset
@@ -130,6 +133,6 @@ path_to_dataset = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
 scanner = EmailScanner(path_to_dataset)
 
 # Test the function preprocess_single_email. 
-#sample_email = scanner.dataset['Message'][0]
-#print("Original email: ", sample_email)
-#print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
+sample_email = scanner.dataset['Message'][100]
+print("Original email: ", sample_email)
+print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
