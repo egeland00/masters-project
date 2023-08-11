@@ -13,9 +13,10 @@ nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
-
+dataset_path = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
 class EmailScanner:
-        
+
+
         def __init__(self, dataset_path): # add path to dataset
             self.dataset = pd.read_csv(dataset_path)
             print(self.dataset.head()) # added to test to see if the dataset is loaded correctly
@@ -127,12 +128,12 @@ class EmailScanner:
         
 
     # Specify the path to your dataset
-path_to_dataset = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
+#dataset_path = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
 
 # Create an instance of the EmailScanner class using the path
-scanner = EmailScanner(path_to_dataset)
+scanner = EmailScanner(dataset_path)
 
 # Test the function preprocess_single_email. 
-sample_email = scanner.dataset['Message'][100]
-print("Original email: ", sample_email)
-print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
+#sample_email = scanner.dataset['Message'][100]
+#print("Original email: ", sample_email)
+#print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
