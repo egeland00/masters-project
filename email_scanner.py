@@ -19,11 +19,11 @@ class EmailScanner:
 
         def __init__(self, dataset_path): # add path to dataset
             self.dataset = pd.read_csv(dataset_path)
-            print(self.dataset.head()) # added to test to see if the dataset is loaded correctly
+            #print(self.dataset) # added to test to see if the dataset is loaded correctly
             self.stop_words = nltk.corpus.stopwords.words('english')
             self.preprocess_dataset()
             self.train_model()
-    
+                    
 
         def preprocess_dataset(self):
 
@@ -44,7 +44,6 @@ class EmailScanner:
             # Joining the tokens back to a string
             self.dataset['Message'] = self.dataset['Message'].apply(lambda x: ' '.join(x))
 
-        
 
         def train_model(self):
             # initialise a CountVectorizer. this will convert text into a vectors using the bag-og-word method.
@@ -97,7 +96,7 @@ class EmailScanner:
             email = email.lower()
 
             # Remove any HTML tags that might be present in the email
-            email = BeautifulSoup(email, 'lxml').get_text()
+            #email = BeautifulSoup(email, 'lxml').get_text()
 
             # Tokenize the email into individual words
             tokens = nltk.word_tokenize(email)
@@ -126,12 +125,8 @@ class EmailScanner:
 
             return prediction[0] == "spam"
         
-
-    # Specify the path to your dataset
-#dataset_path = '/home/orjan/Documents/GitHub/masters-project/dataset.csv'
-
 # Create an instance of the EmailScanner class using the path
-scanner = EmailScanner(dataset_path)
+#scanner = EmailScanner(dataset_path)
 
 # Test the function preprocess_single_email. 
 #sample_email = scanner.dataset['Message'][100]

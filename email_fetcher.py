@@ -78,7 +78,7 @@ class EmailFetcher:
             email_message: EmailMessage = email.message_from_bytes(data[0][1])
             
             # The `_parse_email` method is called with the `EmailMessage` object to convert the email into a more usable dictionary format.
-            email_dict = self._parse_email(email_message)
+            email_dict = self.parse_email(email_message)
             
             # The dictionary representing the email is appended to the list of emails.
             emails.append(email_dict)
@@ -108,7 +108,7 @@ class EmailFetcher:
     
         return decoded_value  # here I return the decoded string!
 
-    def _parse_email(self, email: Any) -> Dict[str, Union[str, bool]]:
+    def parse_email(self, email: Any) -> Dict[str, Union[str, bool]]:
         # I'm setting out to extract the main components of an email 
         # (like subject, sender, recipient, date, and body) into a dictionary.
         
