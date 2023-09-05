@@ -4,8 +4,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.metrics import precision_score, recall_score, f1_score
-from bs4 import BeautifulSoup
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 import string
 from typing import List, Dict, Union, Any
 
@@ -19,7 +18,7 @@ class EmailScanner:
 
         def __init__(self, dataset_path): # add path to dataset
             self.dataset = pd.read_csv(dataset_path)
-            #print(self.dataset) # added to test to see if the dataset is loaded correctly
+            print(self.dataset) # added to test to see if the dataset is loaded correctly
             self.stop_words = nltk.corpus.stopwords.words('english')
             self.preprocess_dataset()
             self.train_model()
@@ -46,7 +45,7 @@ class EmailScanner:
 
 
         def train_model(self):
-            # initialise a CountVectorizer. this will convert text into a vectors using the bag-og-word method.
+            # initialise a CountVectorizer. this will convert text into a vectors of numbers.
             self.vectorizer = CountVectorizer()
             # Fit the vectorizer to the 'Message' column in the dataset. This will create a vocabulary of words.
             x = self.vectorizer.fit_transform(self.dataset['Message'])
@@ -63,7 +62,7 @@ class EmailScanner:
             print(f"Vectorized Representation: {vectorized_sample.toarray()}\n")
 
             # Print the vocabulary
-            print("Vocabulary:" , self.vectorizer.vocabulary_)
+            #print("Vocabulary:" , self.vectorizer.vocabulary_)
 
 
             # Split the dataset into training and testing sets.
@@ -86,6 +85,7 @@ class EmailScanner:
             print(confusion_matrix(self.y_test, y_pred))
 
             # Calculate and print precision, recall, and F1 score. Using the 'spam' label as the positive label.
+            print("Accuracy:", accuracy_score(self.y_test, y_pred))
             print("Precision:", precision_score(self.y_test, y_pred, pos_label='spam'))
             print("Recall:", recall_score(self.y_test, y_pred, pos_label='spam'))
             print("F1 Score:", f1_score(self.y_test, y_pred, pos_label='spam'))
@@ -114,7 +114,7 @@ class EmailScanner:
             # Join the processed tokens back together into a single string
             return ' '.join(tokens)
         
-        def scan(self, email: str) -> bool:
+        def scan(self, email: str,) -> bool:
             email = self.preprocess_single_email(email)
             email_vec = self.vectorizer.transform([email])
             prediction = self.model.predict(email_vec)
@@ -126,9 +126,10 @@ class EmailScanner:
             return prediction[0] == "spam"
         
 # Create an instance of the EmailScanner class using the path
-#scanner = EmailScanner(dataset_path)
+scanner = EmailScanner(dataset_path)
 
 # Test the function preprocess_single_email. 
-#sample_email = scanner.dataset['Message'][100]
-#print("Original email: ", sample_email)
-#print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
+sample_email = scanner.dataset['Message'][100]
+print("Original email: ", sample_email)
+print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
+

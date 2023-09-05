@@ -184,10 +184,10 @@ class PhishingDetectorGUI:
             if isinstance(email["body"], bool):
                 continue
             result = self.scanner.scan(str(email["body"]))
-            print(f"Email {i+1} scan result: {result}")  # Add this debug print statement
+            print(f"Email {i+1} scan result: {result}")  # Print the result of the scan, for debugging purposes
             email["is_phishing"] = result
             if email["is_phishing"] == 'spam':
-                self.email_treeview.item(self.email_ids[i], tags='spam')
+                self.email_treeview.item(self.email_ids[i], tags='spam') 
             else:
                 self.email_treeview.item(self.email_ids[i], tags='not_spam')
 
