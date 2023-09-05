@@ -5,7 +5,7 @@ from tkinter import messagebox
 from ttkbootstrap.constants import *
 import ttkbootstrap as ttkbs
 from email_fetcher import EmailFetcher
-from typing import List, Dict, Union
+from email_scanner import EmailScanner
 
 # Defining the GUI class for the application
 class PhishingDetectorGUI:
@@ -14,10 +14,10 @@ class PhishingDetectorGUI:
         self.root = ttkbs.Window(themename="superhero")
         self.root.title("Phishing Detection")
         self.root.geometry("1920x1080")
-        
-        self._create_login_frame()  # Creating the login frame
+        self.scanner = EmailScanner('/home/orjan/Documents/GitHub/masters-project/dataset.csv')
+        self.create_login_frame()  # Creating the login frame
     
-    def _create_login_frame(self):
+    def create_login_frame(self):
         # Creating a Frame to hold the widgets in the center of the window
         self.login_frame = ttkbs.Frame(self.root)
         self.login_frame.pack(expand=True)
@@ -55,7 +55,7 @@ class PhishingDetectorGUI:
 
     
     
-    def _create_main_frame(self):
+    def create_main_frame(self):
         # Create a new Frame widget that will hold all other widgets. This frame is placed in the center of the root window.
         self.main_frame = ttkbs.Frame(self.root)
         self.main_frame.pack(expand=True)
@@ -85,7 +85,7 @@ class PhishingDetectorGUI:
         right_button_frame.pack(side='right')
 
         # Create a "Scan Now" button with a green color (success style). This button is packed to the left in the button frame.
-        scan_emails_button = ttkbs.Button(left_button_frame, text="Scan Now", style="success")
+        scan_emails_button = ttkbs.Button(left_button_frame, text="Scan Now", style="success", command=self.scan_emails)
         scan_emails_button.pack(side='left', padx= 10, pady=5)
 
         # Create a "Load Emails" button with a blue color (info style). This button is packed to the left in the button frame, next to the "Scan Now" button.
@@ -109,7 +109,7 @@ class PhishingDetectorGUI:
         self.email_fetcher = EmailFetcher(email, password, email_service)
         if self.email_fetcher.login():
             self.login_frame.destroy()  # Hide the login frame
-            self._create_main_frame() # Show the main frame
+            self.create_main_frame() # Show the main frame
             messagebox.showinfo("Success", "Logged in successfully!")
         else:
             messagebox.showerror("Error", "Incorrect Credentials!")
@@ -129,21 +129,21 @@ class PhishingDetectorGUI:
         
         # Destroing the main frame and recreate the login frame
         self.main_frame.destroy()
-        self._create_login_frame()  
+        self.create_login_frame()  
 
     # The function "_all_emails" fetches all emails from the email account associated with the email fetcher object.
     # It then uses these emails to update the GUI's email table.
     def _all_emails(self):
-        print("Loading all emails...")
         # Retrieve all emails from the email account. Function is called from email_fetcher.py
         emails = self.email_fetcher.load_all_emails()
-        print(emails)
         # Update the email table in the GUI with the fetched emails
-        self._update_table(emails)
+        self.update_table(emails)
 
-    # The function "_update_table" takes a list of emails (each email represented as a dictionary) as input.
+    
+
+    # The function "update_table" takes a list of emails (each email represented as a dictionary) as input.
     # It updates the GUI's email table with these emails.
-    def _update_table(self, emails: List[Dict[str, Union[str, bool]]]) -> None:
+    def update_table(self, emails):
         # Initialise a list to store the IDs of the email entries in the table
         self.email_ids = []    
 
@@ -174,6 +174,30 @@ class PhishingDetectorGUI:
             self.email_ids.append(email_id)
         self.email_treeview.tag_configure("spam", background="red")  # Set the background color of the "spam" tag to red
         self.email_treeview.tag_configure("not_spam", background="green")  # Set the background color of the "not_spam" tag to green
+    
+    # Function to handle the "Scan Now" button
+    def scan_emails(self):
+        emails = self.email_fetcher.load_all_emails()
+        # Scan emails for phishing
+        for i, email in enumerate(emails):
+            if isinstance(email["body"], bool):
+                continue
+            result = self.scanner.scan(str(email["body"]))
+            print(f"Email {i+1} scan result: {result}")  # Print the result of the scan, for debugging purposes
+            email["is_phishing"] = result
+            if email["is_phishing"] == 'spam':
+                self.email_treeview.item(self.email_ids[i], tags='spam') 
+            else:
+                self.email_treeview.item(self.email_ids[i], tags='not_spam')
+
+        self.email_treeview.tag_configure('spam', background='red') 
+        self.email_treeview.tag_configure('not_spam', background='green')    
+
+        print("Scanning emails completed.")
+        messagebox.showinfo("Info", "Scanning emails completed.")
+
+        # Update table with new emails
+        self.update_table(emails)
 
     # Function to start the GUI
     def run(self):
