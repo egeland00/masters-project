@@ -7,7 +7,7 @@ This project is for educational purposes only. Use at your own risk.
 # Introduction
 This repository contains the source code for my Master of Science (MSc) project. The project aims to develop a tool for detecting phishing emails using machine learning.
 
-#Installation
+# Installation
 ## Prerequisites
 Make sure you have Python installed on your system.
 
