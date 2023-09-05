@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 import string
-from typing import List, Dict, Union, Any
+
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -91,7 +91,7 @@ class EmailScanner:
             print("F1 Score:", f1_score(self.y_test, y_pred, pos_label='spam'))
 
 
-        def preprocess_single_email(self, email: str) -> str:
+        def preprocess_single_email(self, email):
             # Convert the email to lowercase for consistency
             email = email.lower()
 
@@ -114,7 +114,7 @@ class EmailScanner:
             # Join the processed tokens back together into a single string
             return ' '.join(tokens)
         
-        def scan(self, email: str,) -> bool:
+        def scan(self, email):
             email = self.preprocess_single_email(email)
             email_vec = self.vectorizer.transform([email])
             prediction = self.model.predict(email_vec)

@@ -5,7 +5,6 @@ from tkinter import messagebox
 from ttkbootstrap.constants import *
 import ttkbootstrap as ttkbs
 from email_fetcher import EmailFetcher
-from typing import List, Dict, Union
 from email_scanner import EmailScanner
 
 # Defining the GUI class for the application
@@ -142,9 +141,9 @@ class PhishingDetectorGUI:
 
     
 
-    # The function "_update_table" takes a list of emails (each email represented as a dictionary) as input.
+    # The function "update_table" takes a list of emails (each email represented as a dictionary) as input.
     # It updates the GUI's email table with these emails.
-    def update_table(self, emails: List[Dict[str, Union[str, bool]]]) -> None:
+    def update_table(self, emails):
         # Initialise a list to store the IDs of the email entries in the table
         self.email_ids = []    
 
@@ -191,7 +190,7 @@ class PhishingDetectorGUI:
             else:
                 self.email_treeview.item(self.email_ids[i], tags='not_spam')
 
-        self.email_treeview.tag_configure('spam', background='red')
+        self.email_treeview.tag_configure('spam', background='red') 
         self.email_treeview.tag_configure('not_spam', background='green')    
 
         print("Scanning emails completed.")

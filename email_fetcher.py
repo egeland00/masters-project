@@ -3,7 +3,7 @@ import tkinter as tk  # Tkinter for GUI-related tasks such as displaying error m
 from tkinter import messagebox
 import email  # Library for handling email messages
 from email.message import EmailMessage  # EmailMessage class for creating email messages
-from typing import List, Dict, Union, Any  # Type hints for the functions
+from typing import Dict, Union, Any  # Type hints for the functions
 from email.header import decode_header  # decode_header function for decoding email headers
 
 
@@ -52,14 +52,14 @@ class EmailFetcher:
             print(f"Logout failed: {e}")
             return False
     # Load all emails from the user's email account. Returns a list of dictionaries, where each dictionary represents an email.(Typehint)
-    def load_all_emails(self) -> List[Dict[str, Union[str, bool]]]:
+    def load_all_emails(self):
         # The IMAP `select` command is used to select the "inbox" mailbox. This is the mailbox from which the emails will be fetched.
         self.mail.select("inbox")
         
         # The IMAP `search` command is used to find all emails in the selected mailbox. The `None` argument means that no specific criteria are used for the search, so all emails will be returned.
         _, data = self.mail.search(None, "ALL")
         
-        # The `_fetch_emails` method is called with the email IDs returned by the `search` command. It fetches the emails from the server and returns them as a list of dictionaries.
+        # The `fetch_emails` method is called with the email IDs returned by the `search` command. It fetches the emails from the server and returns them as a list of dictionaries.
         return self.fetch_emails(data)
 
     def fetch_emails(self, data):
@@ -77,6 +77,7 @@ class EmailFetcher:
             # The raw email data is parsed into an `EmailMessage` object.
             email_message: EmailMessage = email.message_from_bytes(data[0][1])
             
+            
             # The `_parse_email` method is called with the `EmailMessage` object to convert the email into a more usable dictionary format.
             email_dict = self.parse_email(email_message)
             
@@ -87,7 +88,7 @@ class EmailFetcher:
         return emails
 
     
-    def decode_header_value(self, value: str) -> str:
+    def decode_header_value(self, value):
     # I'm creating this function to decode email headers since as they where encrypted
     
         decoded_value = ""  # I'll accumulate the decoded segments here.
@@ -108,7 +109,7 @@ class EmailFetcher:
     
         return decoded_value  # here I return the decoded string!
 
-    def parse_email(self, email: Any) -> Dict[str, Union[str, bool]]:
+    def parse_email(self, email):
         # I'm setting out to extract the main components of an email 
         # (like subject, sender, recipient, date, and body) into a dictionary.
         
