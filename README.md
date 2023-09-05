@@ -7,6 +7,21 @@ This project is for educational purposes only. Use at your own risk.
 # Introduction
 This repository contains the source code for my Master of Science (MSc) project. The project aims to develop a tool for detecting phishing emails using machine learning.
 
+#Installation
+## Prerequisites
+Make sure you have Python installed on your system.
+
+Install the package manager [pip](https://pip.pypa.io/en/stable/).
+
+
+## Installing Dependencies
+
+Navigate to the project directory and run the following command to install the required libraries:
+
+```bash
+pip install -r requirements.txt
+```
+
 # Features
  - Graphical User Interface (GUI) for ease of use
  - Secure SSL login using your email and credentials
