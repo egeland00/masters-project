@@ -126,10 +126,10 @@ class EmailScanner:
             return prediction[0] == "spam"
         
 # Create an instance of the EmailScanner class using the path
-scanner = EmailScanner(dataset_path)
+#scanner = EmailScanner(dataset_path)
 
 # Test the function preprocess_single_email. 
-sample_email = scanner.dataset['Message'][100]
-print("Original email: ", sample_email)
-print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
+#sample_email = scanner.dataset['Message'][100]
+#print("Original email: ", sample_email)
+#print("\nProcessed Email:", scanner.preprocess_single_email(sample_email))
 
